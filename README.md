@@ -6,7 +6,7 @@
 
 ### Kernel
 
-#### [`printString`]
+#### [`printString`](./src/printString)
 
 ```
 void printString(const char* str) {
