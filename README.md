@@ -74,4 +74,5 @@ void clearScreen() {
 }
 ```
 
+
 ## B.) Lengkapi implementasi fungsi-fungsi di [`std_lib.h`](./include/std_lib.h) dalam [`std_lib.c`](./src/std_lib.c).
