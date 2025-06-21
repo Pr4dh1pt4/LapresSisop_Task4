@@ -76,6 +76,13 @@ void clearScreen() {
 
 
 ## B.) Lengkapi implementasi fungsi-fungsi di [`std_lib.h`](./include/std_lib.h) dalam [`std_lib.c`](./src/std_lib.c).
+  - `int div` : berfungsi untuk melakukan pembagian integer tanpa menggunakan operator `/`.
+  - `int mod` : berfungsi untuk menghitung sisa pembagian (modulus) tanpa operator %
+  - `void memcpy` : Fungsi ini menyalin `size` byte data dari `src` ke `dst`
+  - `unsigned int strlen` : Berfungsi untuk menghitung panjang string sampai karakter null `('\0')`.
+  - `bool strcmp` : Berfungsi untuk membandingkan dua string, apakah isinya sama atau tidak.
+  - `void strcpy` : Berfungsi untuk menyalin isi string `src` ke `dst`.
+  - `void clear` : Berfungsi untuk mengisi buffer dengan nol (0) sebanyak `size` byte.
 #### [`std_lib.c`](./src/std_lib.c)
 
 ```
