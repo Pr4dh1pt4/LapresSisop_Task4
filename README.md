@@ -1,5 +1,5 @@
 # Task4
-## A.) Implementasikan fungsi `printString`, `readString`, dan `clearScreen` di `kernel.c` yang akan menampilkan dan membaca string di layar.
+## A.) Implementasi fungsi `printString`, `readString`, dan `clearScreen` di `kernel.c` yang akan menampilkan dan membaca string di layar.
   - `printString`: Menampilkan string yang diakhiri null menggunakan `int 10h` dengan `AH=0x0E`.
   - `readString`: Membaca karakter dari keyboard menggunakan `int 16h` dengan `AH=0x00` sampai Enter ditekan. Termasuk penanganan Backspace dasar.
   - `clearScreen`: Membersihkan layar dan mengatur kursor ke pojok kiri atas `(0, 0)` menggunakan `int 10h` dengan `AH=0x06` dan `AH=0x02`. Buffer video untuk warna karakter akan diubah menjadi putih.
@@ -75,7 +75,7 @@ void clearScreen() {
 ```
 
 
-## B.) Lengkapi implementasi fungsi-fungsi di [`std_lib.h`](./include/std_lib.h) dalam [`std_lib.c`](./src/std_lib.c).
+## B.) Implementasi fungsi-fungsi di [`std_lib.h`](./include/std_lib.h) dalam [`std_lib.c`](./src/std_lib.c).
   - `int div` : berfungsi untuk melakukan pembagian integer tanpa menggunakan operator `/`.
   - `int mod` : berfungsi untuk menghitung sisa pembagian (modulus) tanpa operator %
   - `void memcpy` : Fungsi ini menyalin `size` byte data dari `src` ke `dst`
@@ -143,3 +143,5 @@ void clear(byte* buf, unsigned int size) {
     }
 }
 ```
+
+## C.) Implementasi perintah `echo` dan `grep`
