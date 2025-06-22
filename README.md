@@ -152,3 +152,145 @@ void clear(byte* buf, unsigned int size) {
 ```
 
 ## C.) Implementasi perintah `echo` dan `grep`
+  - `void Echo` : Berfungsi untuk mengambil argumen yang diberikan (karakter keyboard) untuk perintah `echo` dan mencetaknya ke shell.
+  - `void Grep` : Berfungsi untuk mencari baris yang cocok dengan pola dalam inputnya dan mencetak baris yang cocok. `grep` hanya akan mengambil satu argumen menggunakan piping (`|`) dari perintah `echo`. Output harus berupa bagian dari argumen yang di-pipe yang diteruskan ke `grep`. Jika argumen tidak cocok, mengembalikan `NULL`.
+
+#### [`Echo`](./src/Echo)
+
+```
+void Echo(char *buf, char *outBuf, bool print) {
+  ...
+  if (strncmp(buf, "echo", 4) == 0 && buf[4] != ' ') {
+    return;
+  }
+
+  while (buf[i] != '\0') {
+    if (buf[i] == '"') {
+      hasOpeningQuote = true;
+      i++;
+      break;
+    }
+    i++;
+  }
+
+  if (hasOpeningQuote == false) {
+    if (print == 1) {
+      printString("Error: Missing operator\n");
+    }
+    return;
+  }
+
+  k = i;
+  while (buf[i] != '\0') {
+    if (buf[i] == '"') {
+      hadClosingQuote = true;
+      break;
+    }
+    i++;
+  }
+
+  if (hadClosingQuote == false) {
+    if (print == 1) {
+      printString("Error: Missing closing quote\n");
+    }
+    return;
+  }
+
+  i = k;
+
+  while (buf[i] != '\0' && buf[i] != '"' && j < 127) {
+    if (buf[i] == '\\') {
+      i++;
+      if (buf[i] == 'n') {
+        outBuf[j++] = '\n';
+        i++;
+      } else {
+        outBuf[j++] = '\\';
+        if (buf[i] != '\0') {
+          outBuf[j++] = buf[i++];
+        }
+      }
+    } else {
+      outBuf[j++] = buf[i++];
+    }
+  }
+
+  outBuf[j] = '\0';
+
+  if (print) {
+    printString(outBuf);
+    printString("\n");
+  }
+}
+
+```
+
+#### [`Grep`](./src/Grep)
+
+```
+void Grep(char *buf, char *outBuf, bool print) {
+  ...
+  if (strncmp(buf, "echo", 4) == 0 && buf[4] != ' ') {
+    return;
+  }
+
+  while (buf[i] != '\0') {
+    if (buf[i] == '"') {
+      hasOpeningQuote = true;
+      i++;
+      break;
+    }
+    i++;
+  }
+
+  if (hasOpeningQuote == false) {
+    if (print == 1) {
+      printString("Error: Missing operator\n");
+    }
+    return;
+  }
+
+  k = i;
+  while (buf[i] != '\0') {
+    if (buf[i] == '"') {
+      hadClosingQuote = true;
+      break;
+    }
+    i++;
+  }
+
+  if (hadClosingQuote == false) {
+    if (print == 1) {
+      printString("Error: Missing closing quote\n");
+    }
+    return;
+  }
+
+  i = k;
+
+  while (buf[i] != '\0' && buf[i] != '"' && j < 127) {
+    if (buf[i] == '\\') {
+      i++;
+      if (buf[i] == 'n') {
+        outBuf[j++] = '\n';
+        i++;
+      } else {
+        outBuf[j++] = '\\';
+        if (buf[i] != '\0') {
+          outBuf[j++] = buf[i++];
+        }
+      }
+    } else {
+      outBuf[j++] = buf[i++];
+    }
+  }
+
+  outBuf[j] = '\0';
+
+  if (print) {
+    printString(outBuf);
+    printString("\n");
+  }
+}
+
+```    
