@@ -222,7 +222,6 @@ void Echo(char *buf, char *outBuf, bool print) {
     printString("\n");
   }
 }
-
 ```
 
 #### [`Grep`](./src/Grep)
@@ -292,5 +291,70 @@ void Grep(char *buf, char *outBuf, bool print) {
     printString("\n");
   }
 }
-
 ```    
+
+## D.) Implementasi perintah `wc`
+  - `void handlewc` : Berfungsi untuk menghitung baris, kata, dan karakter dalam inputnya.
+ 
+#### [`handlewc`](./src/handlewc)
+
+```
+void handleWc(char *buf, char *prevBuf) {
+  unsigned int len = 0;
+  unsigned int lines = 0;
+  unsigned int words = 0;
+  unsigned int chars = 0;
+  unsigned int bufLen = 0;
+  bool insideWord = false;
+  char lineStr[6];
+  char wordStr[6];
+  char charsStr[6];
+  unsigned int i;
+
+  len = strlen(buf);
+
+  if (strncmp(buf, "wc", 2) == 0 && buf[2] != '\0') {
+    return;
+  }
+
+  bufLen = strlen(prevBuf);
+  if (bufLen < 1) {
+    printString("NULL\n");
+    return;
+  }
+
+  for (i = 0; i < bufLen; i++) {
+    if (buf[i] != '\n') {
+      chars++;
+    }
+
+    if (prevBuf[i] == '\n') {
+      lines++;
+    }
+
+    if (prevBuf[i] != ' ' &&
+        (i == 0 || prevBuf[i - 1] == ' ' || prevBuf[i - 1] == '\n') &&
+        !insideWord) {
+      insideWord = true;
+      words++;
+    } else {
+      insideWord = false;
+    }
+  }
+
+  if (chars > 0 && prevBuf[chars - 1] != '\n') {
+    lines++;
+  }
+
+  intToStr(lines, lineStr);
+  intToStr(words, wordStr);
+  intToStr(chars, charsStr);
+
+  printString(lineStr);
+  printString(" ");
+  printString(wordStr);
+  printString(" ");
+  printString(charsStr);
+  printString("\n");
+}
+```
