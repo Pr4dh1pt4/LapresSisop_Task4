@@ -7,52 +7,56 @@
 #### [`printString`](./src/printString)
 
 ```
-void printString(const char* str) {
-    while (*str != '\0') {
-        __asm__ __volatile__ (
-            "int $0x10"
-            : 
-            : "a" (0x0E00 | *str), "b" (0x0007)
-        );
-        str++;
+void printString(char *str) {
+  int i = 0;
+  while (str[i] != '\0') {
+    if (str[i] == '\n') {
+      cursorRow++;
+
+      if (cursorRow >= SCREEN_HEIGHT) {
+        clearScreen();
+      }
+      cursorCol = 0;
+    } else {
+      putChar(str[i]);
     }
+
+    i++;
+  }
+
+  updateCursorPos();
 }
 ```
 
 #### [`readString`](./src/readString)
 
 ```
-void readString(char* buf) {
-    int idx = 0;
-    char key;
+void readString(char *buf) {
+  int i = 0;
+  char c = 0;
+  clear((byte *)buf, 128);
 
-    while (true) {
-        __asm__ __volatile__ (
-            "int $0x16"
-            : "=a" (key)
-            : "a" (0x0000)
-        );
+  while (1) {
+    c = interrupt(0x16, 0x0000, 0, 0, 0) & 0xFF;
 
-        switch (key) {
-            case 0x08:
-                if (idx > 0) {
-                    idx--;
-                    printString("\b \b");
-                }
-                break;
-
-            case 0x0D:
-                buf[idx] = '\0';
-                return;
-
-            default:
-                if (idx < 127 && key >= 32 && key <= 126) {
-                    buf[idx++] = key;
-                    printString(&key);
-                }
-                break;
-        }
+    if (c == '\r') {
+      buf[i] = '\0';
+      printString("\n");
+      break;
+    } else if (c == '\b') { // Backspace
+      if (i > 0 && cursorCol > SHELL_OFFSET) {
+        i--;
+        cursorCol--;
+        updateCursorPos();
+        putChar(' ');
+        cursorCol--;
+        updateCursorPos();
+      }
+    } else {
+      buf[i++] = c;
+      putChar(c); // Echo character
     }
+  }
 }
 ```
 
@@ -60,17 +64,20 @@ void readString(char* buf) {
 
 ```
 void clearScreen() {
-     __asm__ __volatile__ (
-        "int $0x10"
-        : 
-        : "a" (0x0600), "b" (0x07), "c" (0x0000), "d" (0x184F)
-    );
+  int i;
+  for (i = 0; i < SCREEN_WIDTH * SCREEN_HEIGHT; i++) {
+    putInMemory(0xB800, i * 2, ' ');
+    putInMemory(0xB800, i * 2 + 1, 0x0F);
+  }
 
-    __asm__ __volatile__ (
-        "int $0x10"
-        : 
-        : "a" (0x0200), "b" (0x00), "d" (0x0000)
-    );
+  cursorCol = 0;
+  cursorRow = 0;
+
+  interrupt(0x10, 0x06 << 8 | 0x00, 0x00, 0x00, 0x18 << 8 | 0x4F);
+
+  interrupt(0x10, 0x02 << 8 | 0x00, 0, 0, 0);
+
+  updateCursorPos();
 }
 ```
 
